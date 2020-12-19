@@ -82,7 +82,7 @@ def save(request,id1,id2):
         optedAnswer = request.POST['opted']
         timetaken = request.POST.get('timer')
         
-        if type(timetaken)!=type(int):
+        if not isinstance(timetaken,int):
             timetaken=0
         else:
             timetaken=int(timetaken)
@@ -95,7 +95,7 @@ def save(request,id1,id2):
         obj = Response.objects.filter(quizQuestionId=questionObj,quizTakerId=quizTakerObj)
         
         if obj.exists():
-            messages.info(request,'You can submit more than once')
+            messages.info(request,'You can submit more than once for a question')
         else:
             responseobj = Response(quizQuestionId=questionObj,quizTakerId=quizTakerObj,SelectedOption=optedAnswer,user=request.user)
             responseobj.save()
@@ -124,9 +124,11 @@ def results(request):
     resultObj = quizTaker.objects.filter(user=request.user)
     con={}
     for obj in resultObj:
+        date_time = obj.AttemptedTime.strftime("%m/%d/%Y, %H:%M:%S")
+        print(date_time)
         quizname = obj.quizSetAttempted.quizName
         score = obj.score
-        con[obj.AttemptedTime]=(quizname,score)
+        con[date_time]=(quizname,score)
     table={}
     table['Quiz']=con
     return render(request,'result.html',table)

@@ -1,5 +1,5 @@
 {% load static %}
 {% include 'base.html' %}
 {% for key,val in Quiz.items %}
-<p>Score for {{val.0}} is {{val.1}} taken at time {{key}}
+<p>Score for {{val.0}} is {{val.1}}. The test was taken at {{key}}. </p>
 {% endfor %}
