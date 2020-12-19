@@ -125,7 +125,6 @@ def results(request):
     con={}
     for obj in resultObj:
         date_time = obj.AttemptedTime.strftime("%m/%d/%Y, %H:%M:%S")
-        print(date_time)
         quizname = obj.quizSetAttempted.quizName
         score = obj.score
         con[date_time]=(quizname,score)
