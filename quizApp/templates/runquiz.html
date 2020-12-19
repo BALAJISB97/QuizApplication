@@ -1,0 +1,107 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+
+    <title>Quiz in Progress</title>
+  </head>
+  <body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" >Hi {{quizTaker.user}}</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#">Home</a>
+        </li>
+         <li class="nav-item">
+          <a class="nav-link">current score {{quizTaker.score}}/ 10 </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link">total time taken in seconds {{quizTaker.totaltime}}</a>
+        </li>
+      
+        <li class="nav-item">
+          <a class="nav-link" id="counter"></a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+{% for qn in question %}
+<p2>{{forloop.counter}}. {{qn.quizQuestion}}</p2><br><br>
+<p1>1. {{qn.option1}}</p1><br>
+<p1>2. {{qn.option2}}</p1><br>
+<p1>3. {{qn.option3}}</p1><br>
+<p1>4. {{qn.option4}}</p1><br>
+{% for key,value in recordedResponse.items %}
+       {% if key == qn.quizQuestionId|add:"0" %}
+              {% if value > 0 %}
+                     {% if value == qn.answer|add:"0" %}
+                            <p> You've answered correctly! </p> <br>
+                     {% else %}
+                            <p> Incorrect answer!! Correct option is {{qn.answer}} </p>
+                     {% endif %}
+             <!-- </p>selected option = {{value}} </p> <br> 
+              </p> correct answer is {{qn.answer}} </p> -->
+              {% endif %}
+       {% endif %}
+{% endfor %}
+<!--id1=> QuestionId | id2 => QuizTakerId-->
+<form action="/saveResponse/{{qn.quizQuestionId}}/{{quizTaker.quizTakerId}}" method = "POST">
+       {% csrf_token %}
+       <!--<div class="form-group">-->
+       <input type="number" step="1" class="form-control" id="opted" name="opted" placeholder="Enter the option number alone!">
+       <input type="hidden" id="timer" class="form-control" name="timer">
+       <!--</div>-->
+       <button type="submit" class="btn btn-success">Submit</button>
+       </form>
+
+{% endfor %}
+
+<form action="/endquiz/{{quizTaker.quizTakerId}}" method="POST">
+       {% csrf_token %}
+       <div class="form-group">
+       <br>
+        <button type="submit" class="btn btn-danger">End Quiz</button>
+    </form>
+
+    <!-- Optional JavaScript; choose one of the two! -->
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js" integrity="sha384-q2kxQ16AaE6UbzuKqyBE9/u/KzioAlnx2maXQHiDX9d4/zp8Ok3f+M7DPm+Ib6IU" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.min.js" integrity="sha384-pQQkAEnwaBkjpqZ8RU1fF1AKtTcHJwFl3pblpTlHXybJjHpMYo79HY3hIi4NKxyj" crossorigin="anonymous"></script>
+    -->
+  </body>
+      <script>
+    var time = 0;
+    var seconds = 0;
+    var minutes = 0;
+    var count = setInterval(function(){
+      time++;
+      minutes = Math.floor(time/60);
+      seconds = time % 60;
+      seconds = seconds < 10 ? '0'+ seconds : seconds;
+      minutes = minutes < 10 ? '0'+ minutes : minutes;
+      document.getElementById("counter").innerHTML=`Timetaken ${minutes}:${seconds}`;
+      ho=document.getElementById('timer');
+      ho.setAttribute('value',time);
+      console.log('hidden obj',ho.value);
+
+    },1000);
+    </script>
+</html>

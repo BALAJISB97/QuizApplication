@@ -1,0 +1,19 @@
+{% load static %}
+{% for qn in question %}
+<p2>{{forloop.counter}}. {{qn.quizQuestion}}</p2><br><br>
+<p1>1. {{qn.option1}}</p1><br>
+<p1>2. {{qn.option2}}</p1><br>
+<p1>3. {{qn.option3}}</p1><br>
+<p1>4. {{qn.option4}}</p1><br>
+<form action="runquiz">
+       <div class="form-group">
+        <input type="number" step="1" class="form-control" id="opted" name="opted" placeholder="Enter the option number alone!">
+        </div>
+        <button type="submit" class="btn btn-success">Submit</button>
+        </form>
+
+{% endfor %}
+<form action="">
+       <div class="form-group">
+        <button type="submit" class="btn btn-success">End Quiz</button>
+    </form>

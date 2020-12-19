@@ -1,0 +1,7 @@
+{% load static %}
+{% include 'base.html' %}
+{% for quiz in quizset %}
+<div class="list-group">
+  <a href="takequiz/{{quiz.quizSetId}}" class="list-group-item list-group-item-action list-group-item-primary">{{quiz.quizName}} click to start!</a>
+</div>
+ {% endfor %}
