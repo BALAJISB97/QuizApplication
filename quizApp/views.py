@@ -12,7 +12,6 @@ def loginn(request):
         user = auth.authenticate(username=username,password=password)
         if user is not None:
             auth.login(request,user)
-            print('Login done')
             messages.info(request,'Authenticated!')
             return render(request,'home.html')
         else:
@@ -68,7 +67,6 @@ def runquiz(request,id1,id2):
     quizTakerobj = quizTaker.objects.get(pk=id2)
     context = {'question':question,'quizTaker':quizTakerobj}
     responeObj = Response.objects.filter(quizTakerId=quizTakerobj)
-    print(responeObj)
     recordedResponse={}
     for resp in responeObj:
         questionId,selectedOption=resp.quizQuestionId,resp.SelectedOption
@@ -112,7 +110,6 @@ def save(request,id1,id2):
         qobj=QuizSet.objects.get(quizName=qset)
         id1=qobj.quizSetId
         #id1 => QuizSetId | id2 => QuizTakerId
-        print('---------before redirect-------------------',id1,id2)
         return redirect(runquiz,id1,id2)
 
 def endquiz(request,id1):
@@ -127,10 +124,8 @@ def results(request):
     resultObj = quizTaker.objects.filter(user=request.user)
     con={}
     for obj in resultObj:
-        print(obj)
         quizname = obj.quizSetAttempted.quizName
         score = obj.score
-        print(quizname,score,obj.AttemptedTime)
         con[obj.AttemptedTime]=(quizname,score)
     table={}
     table['Quiz']=con
